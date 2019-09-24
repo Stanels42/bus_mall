@@ -1,3 +1,12 @@
 img{
   width: 30%;
 }
+.good {
+  color:darkgreen;
+}
+.bad {
+  color:darkred;
+}
+.veryBad {
+  color:red;
+}
