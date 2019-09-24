@@ -288,8 +288,7 @@ function handleVote (event) {
 
     //Give the selected image a point
     var position = Number(event.target.id);
-    console.log(imageIndices);
-    console.log();
+
     var objIndice = imageIndices[ position ];
 
     StoreItem.all[ objIndice ].clicks++;
