@@ -12,21 +12,21 @@ var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 
 var imageSpace = document.getElementById('votingImages');
 imageSpace.addEventListener('click', handleVote);
 
-//Get each of the images
-var imageLeft = document.getElementById('imageLeft');
-var imageCenter = document.getElementById('imageCenter');
-var imageRight = document.getElementById('imageRight');
+//Store all image elements on the page
+var allImages = [];
 
 //The array of all items for sale
 StoreItem.all = [];
 
 //Stores all current image indices left:0 center:1 right:2
-var imageIndices = [null, null, null];
+var imageIndices = [];
 
-//used in selecting new products currently no support of other numbers
-const imageShown = 3;
+//Says how many idems will be displayed to the user
+//Limit 1/2 the amount of items for show
+var imageShown = 27;
+
 //The number of voting rounds before the results were shown
-const maxVotes = 25;
+const maxVotes = 5;
 //tracks the user votes relitive to the max votes
 var votes = 0;
 
@@ -59,13 +59,41 @@ function random (max) {
 
 }
 
+//Sets up some basic values as well as
+function setup () {
+
+  //Make sure the number of images shown is less then half the products
+  if (imageShown > (allItems.length / 2)) {
+
+    imageShown = Math.round((allItems.length / 2) - 1);
+
+  }
+
+  for( var i = 0; i < imageShown; i++ ) {
+
+    //Prepare the indices array
+    imageIndices.push(null);
+
+    //Create an img element for each product that will be shown
+    var newImage = addElement('img', imageSpace);
+
+    newImage.id = i;
+    newImage.alt = i;
+    allImages.push(newImage);
+
+  }
+
+  populateItems();
+
+}
+
 //Create Each Object
 function populateItems () {
 
   //for every item add careat a new item object with name and image location
   for (var i = 0; i < allItems.length; i++) {
 
-    //This is for the case of the USB since it's image is a gif
+    //This is for the case of the USB since it's image is a gif and not jpg
     if (i === allItems.length - 1) {
 
       new StoreItem(allItems[i], `images/${allItems[i]}.gif`);
@@ -122,14 +150,12 @@ function loadImages () {
   imageIndices.splice(0, imageShown);
 
   //Display all current images
-  imageLeft.src = StoreItem.all[ imageIndices[0] ].image;
-  StoreItem.all[ imageIndices[0] ].views++;
+  for (var i = 0; i < imageShown; i++) {
 
-  imageCenter.src = StoreItem.all[ imageIndices[1] ].image;
-  StoreItem.all[ imageIndices[1] ].views++;
+    allImages[i].src = StoreItem.all[ imageIndices[i] ].image;
+    StoreItem.all[ imageIndices[i] ].views++;
 
-  imageRight.src = StoreItem.all[ imageIndices[2] ].image;
-  StoreItem.all[ imageIndices[2] ].views++;
+  }
 
 }
 
@@ -153,6 +179,10 @@ function displayResultsText () {
 
 }
 
+/**
+ * Start of Table display
+ */
+
 //For when the list is to cluttered and boring (Uncomment Below)
 function displayResultsTable () {
 
@@ -169,7 +199,9 @@ function displayResultsTable () {
     var currentRow = addElement('tr', table);
 
     fillBody(currentRow, currentObj);
+
   }
+
 }
 
 //Well it's what the name says...
@@ -189,14 +221,15 @@ function tableHeader (table) {
 function fillBody (currentRow, currentObj) {
 
   var percentClick = ((currentObj.clicks / currentObj.views) * 100);
-  var preformance = (percentClick * 3);
+  var preformance = (percentClick * imageShown);
 
   addElement('td', currentRow, currentObj.name);
   addElement('td', currentRow, currentObj.views);
   addElement('td', currentRow, currentObj.clicks);
+
   if (currentObj.views === 0) {
 
-    addElement('td', currentRow, 'No Data', 'veryBad')
+    addElement('td', currentRow, 'No Data', 'veryBad');
 
   } else {
 
@@ -205,7 +238,7 @@ function fillBody (currentRow, currentObj) {
   }
 
   //Yeah this function has a lot of math and stuff
-  if (percentClick.toFixed(2) === (100 / 3).toFixed(2)) {
+  if (percentClick.toFixed(2) === (100 / imageShown).toFixed(2)) {
 
     addElement('td', currentRow, `${preformance.toFixed(2)}%`);
 
@@ -223,6 +256,10 @@ function fillBody (currentRow, currentObj) {
 
   }
 }
+
+/**
+ * End of Table display
+ */
 
 //Used to add elements to HTML
 function addElement (element, parent, content = '', classTag) {
@@ -245,24 +282,16 @@ function handleVote (event) {
   event.preventDefault();
 
   //The source of the mystery still remains but the code is working as intended
-  if (event.target === imageLeft || event.target === imageCenter || event.target === imageRight) {
+  if (event.target !== imageSpace) {
 
     votes++;
 
     //Give the selected image a point
-    if (event.target === imageLeft) {
+    var position = Number(event.target.id);
 
-      StoreItem.all[ imageIndices[0] ].clicks++;
+    var objIndice = imageIndices[ position ];
 
-    } else if (event.target === imageCenter) {
-
-      StoreItem.all[ imageIndices[1] ].clicks++;
-
-    } else if (event.target === imageRight) {
-
-      StoreItem.all[ imageIndices[2] ].clicks++;
-
-    }
+    StoreItem.all[ objIndice ].clicks++;
 
     //If out of votes, Clear event listener and display the results
     //Else load a new set of images
@@ -281,6 +310,11 @@ function handleVote (event) {
 
   }
 
-}
 
-populateItems();
+}
+/**
+End Function Declarations
+ */
+
+//Now everything is loaded create the images items and load the first set to the page
+setup();
