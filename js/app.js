@@ -1,5 +1,7 @@
 'use strict';
 
+
+
 /**
  * Global Variables
 */
@@ -23,10 +25,10 @@ var imageIndices = [];
 
 //Says how many idems will be displayed to the user
 //Limit 1/2 the amount of items for show
-var imageShown = 27;
+var imageShown = 3;
 
 //The number of voting rounds before the results were shown
-const maxVotes = 5;
+const maxVotes = 25;
 //tracks the user votes relitive to the max votes
 var votes = 0;
 
@@ -259,8 +261,159 @@ function fillBody (currentRow, currentObj) {
 
 /**
  * End of Table display
+ * 
+ * Start of chart display
  */
 
+function displayResultsChart () {
+
+  imageSpace.innerHTML = '';
+
+  var chartCanvas = addElement('canvas', imageSpace, '', newChart).getContext('2d');
+
+  var objNames = fillObjNames();
+  var objClicks = fillClicks();
+  var objViews = fillViews();
+  var percentClick = fillPercents();
+
+  var newChart = new Chart(chartCanvas, {
+
+    type: 'bar',
+
+    data: {
+
+      labels: objNames,
+
+      datasets: [{
+
+        yAxisID: 'A',
+        label: '# of Times Clicked',
+
+        data: objClicks,
+
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 1,
+
+      }, {
+
+        yAxisID: 'A',
+        label: '# of Times Viewed',
+
+        data: objViews,
+
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+
+        borderColor: 'rgb(75, 192, 192)',
+        borderWidth: 1,
+
+      }, {
+        yAxisID: 'B',
+        label: 'Percent Clicks per View',
+
+        data: percentClick,
+
+        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+
+        borderColor: 'rgb(255, 159, 64)',
+        borderWidth: 1,
+
+      }],
+    },
+    options: {
+      scales: {
+        yAxes: [{
+
+          id: 'A',
+
+          label: 'views',
+
+          position: 'left',
+          scalePositionLeft: 'true',
+
+          ticks: {
+            beginAtZero: true,
+            stepSize: 5,
+          },
+
+        }, {
+
+          id: 'B',
+
+          label: '% Clicked',
+
+          position: 'right',
+
+          ticks: {
+
+            min: 0,
+            max: 100,
+
+          },
+
+        }],
+      },
+    },
+  });
+}
+
+function fillObjNames () {
+
+  var allNames = [];
+
+  for (var i = 0; i < StoreItem.all.length; i++) {
+
+    allNames.push(StoreItem.all[i].name);
+
+  }
+
+  return allNames;
+
+}
+
+function fillClicks () {
+
+  var allClickCounts = [];
+
+  for (var i = 0; i < StoreItem.all.length; i++) {
+
+    allClickCounts.push(StoreItem.all[i].clicks);
+
+  }
+
+  return allClickCounts;
+
+}
+
+function fillViews () {
+
+  var allViewCounts = [];
+
+  for (var i = 0; i < StoreItem.all.length; i++) {
+
+    allViewCounts.push(StoreItem.all[i].views);
+
+  }
+
+  return allViewCounts;
+
+}
+
+function fillPercents () {
+
+  var percents = [];
+
+  for (var i = 0; i < StoreItem.all.length; i++) {
+
+    var objPercent = ((StoreItem.all[i].clicks / StoreItem.all[i].views) * 100).toFixed(2);
+    percents.push(objPercent);
+
+  }
+
+  return percents;
+
+}
 //Used to add elements to HTML
 function addElement (element, parent, content = '', classTag) {
 
@@ -299,8 +452,9 @@ function handleVote (event) {
 
       imageSpace.removeEventListener('click', handleVote);
 
-      displayResultsText();
+      // displayResultsText();
       // displayResultsTable();
+      displayResultsChart();
 
     } else {
 
