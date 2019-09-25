@@ -9,6 +9,9 @@
 //An array with all items for sale. USB is last because it's a special case
 var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
 
+//Storage Index
+const storageKey = 'shopItems';
+
 //Get nessessary HTML elements
 //Get the aera that encapsulates the images
 var imageSpace = document.getElementById('votingImages');
@@ -53,6 +56,29 @@ function StoreItem (name, image) {
 End Object
 */
 
+//Load saved Data
+function loadLocalData () {
+
+  var saveData = localStorage.getItem(storageKey);
+  if (saveData !== null) {
+
+    saveData = JSON.parse(saveData);
+
+  } else {
+
+    populateItems();
+
+  }
+
+}
+
+//Save Data
+function saveData () {
+
+
+
+}
+
 //Random Number Genorator
 //Return a random number max NOT included
 function random (max) {
@@ -85,7 +111,7 @@ function setup () {
 
   }
 
-  populateItems();
+  loadLocalData();
 
 }
 
@@ -261,7 +287,7 @@ function fillBody (currentRow, currentObj) {
 
 /**
  * End of Table display
- * 
+ *
  * Start of chart display
  */
 
