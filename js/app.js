@@ -26,7 +26,7 @@ var imageIndices = [];
 var imageShown = 3;
 
 //The number of voting rounds before the results were shown
-const maxVotes = 25;
+const maxVotes = 5;
 
 //tracks the user votes relitive to the max votes
 var votes = 0;
@@ -266,15 +266,18 @@ function fillBody (currentRow, currentObj) {
 
 function displayResultsChart () {
 
-  imageSpace.innerHTML = '';
+  //imageSpace.innerHTML = '';
 
+  //Create the canvas element to display the chart
   var chartCanvas = addElement('canvas', imageSpace, '', newChart).getContext('2d');
 
+  //Fill the various arrays used to display in the chart
   var objNames = fillObjNames();
   var objClicks = fillClicks();
   var objViews = fillViews();
   var percentClick = fillPercents();
 
+  //Create the chart the polling data
   var newChart = new Chart(chartCanvas, {
 
     type: 'bar',
@@ -308,6 +311,8 @@ function displayResultsChart () {
         borderWidth: 1,
 
       }, {
+
+        //The percentage bars have their own scale
         yAxisID: 'B',
         label: 'Percent Clicks per View',
 
@@ -324,12 +329,12 @@ function displayResultsChart () {
       scales: {
         yAxes: [{
 
+          //The click and view scale on the chart
           id: 'A',
 
           label: 'views',
 
           position: 'left',
-          scalePositionLeft: 'true',
 
           ticks: {
             beginAtZero: true,
@@ -338,6 +343,7 @@ function displayResultsChart () {
 
         }, {
 
+          //Ther percentage scale, display on the right side
           id: 'B',
 
           label: '% Clicked',
@@ -352,9 +358,13 @@ function displayResultsChart () {
           },
 
         }],
+
       },
+
     },
+
   });
+
 }
 
 /**
