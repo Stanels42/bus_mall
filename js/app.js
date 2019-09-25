@@ -40,13 +40,13 @@ Start Object
 
 Create object for each Image
 */
-function StoreItem (name, image) {
+function StoreItem (name, image, views = 0, clicks = 0) {
 
   //Create the base variable that will be needed
   this.name = name;
   this.image = image;
-  this.views = 0;
-  this.clicks = 0;
+  this.views = views;
+  this.clicks = clicks;
 
   //Add self the array of all store items
   StoreItem.all.push(this);
@@ -63,6 +63,12 @@ function loadLocalData () {
   if (saveData !== null) {
 
     saveData = JSON.parse(saveData);
+
+    for (var i = 0; i < saveData.length; i++) {
+
+      new StoreItem(saveData[i].name ,saveData[i].image , parseInt(saveData[i].views), parseInt(saveData[i].clicks));
+
+    }
 
   } else {
 
