@@ -9,10 +9,11 @@
 //An array with all items for sale. USB is last because it's a special case
 var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
 
-//Get nessessary HTML elements
-//Get the aera that encapsulates the images
+//This is the key that the click data is saved at in local storage
+const storageKey = 'shopItems';
+
+//Get the aera that encapsulates the images for the event listener
 var imageSpace = document.getElementById('votingImages');
-imageSpace.addEventListener('click', handleVote);
 
 //Store all image elements on the page
 var allImages = [];
@@ -37,13 +38,13 @@ Start Object
 
 Create object for each Image
 */
-function StoreItem (name, image) {
+function StoreItem (name, image, views = 0, clicks = 0) {
 
   //Create the base variable that will be needed
   this.name = name;
   this.image = image;
-  this.views = 0;
-  this.clicks = 0;
+  this.views = views;
+  this.clicks = clicks;
 
   //Add self the array of all store items
   StoreItem.all.push(this);
@@ -51,6 +52,53 @@ function StoreItem (name, image) {
 
 /**
 End Object
+*/
+
+/**
+Start data storage
+*/
+
+//Load saved Data
+function loadLocalData () {
+
+  //Get the saved data as a string
+  var saveData = localStorage.getItem(storageKey);
+
+  //If there is data at that point recreate the objects
+  if (saveData !== null) {
+
+    saveData = JSON.parse(saveData);
+
+    for (var i = 0; i < saveData.length; i++) {
+
+      //Convert the data that is saved to to proper StoreItem objects
+      new StoreItem(saveData[i].name ,saveData[i].image , parseInt(saveData[i].views), parseInt(saveData[i].clicks));
+
+    }
+
+  } else {
+
+    //If there is no saved Data load the images like before
+    //Should only be run the first time the porgram is run
+    populateItems();
+
+  }
+
+  //Display the first set of 3 images
+  loadImages();
+
+}
+
+//Save current clicks and views
+function saveData () {
+
+  var dataToStore = JSON.stringify(StoreItem.all);
+  localStorage.setItem(storageKey, dataToStore);
+
+}
+
+/**
+End Data Storage
 */
 
 //Random Number Genorator
@@ -61,7 +109,7 @@ function random (max) {
 
 }
 
-//Sets up some basic values as well as
+//There is some quality of life information that is need to load on the page
 function setup () {
 
   //Make sure the number of images shown is less then half the products
@@ -85,11 +133,12 @@ function setup () {
 
   }
 
-  populateItems();
+  //This is where the program gets information out of storage
+  loadLocalData();
 
 }
 
-//Create Each Object
+//Create Each Object (Used if there is no save data)
 function populateItems () {
 
   //for every item add careat a new item object with name and image location
@@ -107,9 +156,6 @@ function populateItems () {
     }
 
   }
-
-  //Display the first set of 3 images
-  loadImages();
 
 }
 
@@ -261,19 +307,22 @@ function fillBody (currentRow, currentObj) {
 
 /**
  * End of Table display
- * 
+ *
  * Start of chart display
  */
 
 function displayResultsChart () {
 
+  //I opt to remove the images because after the event listner is removed they are just unnecessary fluff on the page
   imageSpace.innerHTML = '';
 
   var chartCanvas = addElement('canvas', imageSpace, '', newChart).getContext('2d');
 
-  var objNames = fillObjNames();
-  var objClicks = fillClicks();
-  var objViews = fillViews();
+  //Get the different values to be displayed on the chart
+  
+  var objNames = getData('name');
+  var objClicks = getData('clicks');
+  var objViews = getData('views');
   var percentClick = fillPercents();
 
   var newChart = new Chart(chartCanvas, {
@@ -353,53 +402,31 @@ function displayResultsChart () {
           },
 
         }],
+
       },
+
     },
+
   });
+
 }
 
-function fillObjNames () {
+//Get the data for the property for each object and store it in an array the return
+function getData (preperty) {
 
-  var allNames = [];
+  var allData = [];
 
   for (var i = 0; i < StoreItem.all.length; i++) {
 
-    allNames.push(StoreItem.all[i].name);
+    allData.push(StoreItem.all[i][preperty]);
 
   }
 
-  return allNames;
+  return allData;
 
 }
 
-function fillClicks () {
-
-  var allClickCounts = [];
-
-  for (var i = 0; i < StoreItem.all.length; i++) {
-
-    allClickCounts.push(StoreItem.all[i].clicks);
-
-  }
-
-  return allClickCounts;
-
-}
-
-function fillViews () {
-
-  var allViewCounts = [];
-
-  for (var i = 0; i < StoreItem.all.length; i++) {
-
-    allViewCounts.push(StoreItem.all[i].views);
-
-  }
-
-  return allViewCounts;
-
-}
-
+//Calcualt the percent of times the product was clicked for each view
 function fillPercents () {
 
   var percents = [];
@@ -456,8 +483,12 @@ function handleVote (event) {
       // displayResultsTable();
       displayResultsChart();
 
+      //Save the data from the latest set of polling
+      saveData();
+
     } else {
 
+      //Load the next set of images
       loadImages();
 
     }
@@ -470,5 +501,16 @@ function handleVote (event) {
 End Function Declarations
  */
 
+//Add the event linstener to the space where the images are displayed
+imageSpace.addEventListener('click', handleVote);
+
 //Now everything is loaded create the images items and load the first set to the page
 setup();
+
+/**
+-> Setup -> Loads the information that the page needs to run
+Calls:
+-> Load Data -> Loads the data from storage and creates hte objects. will create new objects if there is nothing stored
+Calls:
+-> load Images -> Loads the first set of three images on the page
+*/
