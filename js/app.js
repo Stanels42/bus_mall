@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 /**
  * Global Variables
 */
@@ -10,7 +8,7 @@
 var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
 
 //Get nessessary HTML elements
-//Get the aera that encapsulates the images
+//Get the aera that encapsulates the images and addes the click event
 var imageSpace = document.getElementById('votingImages');
 imageSpace.addEventListener('click', handleVote);
 
@@ -29,6 +27,7 @@ var imageShown = 3;
 
 //The number of voting rounds before the results were shown
 const maxVotes = 25;
+
 //tracks the user votes relitive to the max votes
 var votes = 0;
 
@@ -358,6 +357,11 @@ function displayResultsChart () {
   });
 }
 
+/**
+ * End Chart Display
+ */
+
+//Make the array of all the object names
 function fillObjNames () {
 
   var allNames = [];
@@ -372,6 +376,7 @@ function fillObjNames () {
 
 }
 
+//Make an array of all the click counts
 function fillClicks () {
 
   var allClickCounts = [];
@@ -386,6 +391,7 @@ function fillClicks () {
 
 }
 
+//Make an array of all the object views
 function fillViews () {
 
   var allViewCounts = [];
@@ -400,6 +406,7 @@ function fillViews () {
 
 }
 
+//Make an array that has the calculated values of the precent times an object was clicked
 function fillPercents () {
 
   var percents = [];
