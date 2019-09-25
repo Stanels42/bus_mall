@@ -64,6 +64,8 @@ function loadLocalData () {
 
     saveData = JSON.parse(saveData);
 
+    console.log(saveData);
+
     for (var i = 0; i < saveData.length; i++) {
 
       new StoreItem(saveData[i].name ,saveData[i].image , parseInt(saveData[i].views), parseInt(saveData[i].clicks));
@@ -76,12 +78,17 @@ function loadLocalData () {
 
   }
 
+  console.log(StoreItem.all);
+  //Display the first set of 3 images
+  loadImages();
+
 }
 
 //Save Data
 function saveData () {
 
-
+  var dataToStore = JSON.stringify(StoreItem.all);
+  localStorage.setItem(storageKey, dataToStore);
 
 }
 
@@ -139,9 +146,6 @@ function populateItems () {
     }
 
   }
-
-  //Display the first set of 3 images
-  loadImages();
 
 }
 
@@ -487,6 +491,8 @@ function handleVote (event) {
       // displayResultsText();
       // displayResultsTable();
       displayResultsChart();
+
+      saveData();
 
     } else {
 
