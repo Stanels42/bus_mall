@@ -5,7 +5,7 @@
 */
 
 //An array with all items for sale. USB is last because it's a special case
-var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
+var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
 
 //This is the key that the click data is saved at in local storage
 const storageKey = 'shopItems';
@@ -65,12 +65,12 @@ function loadLocalData () {
   //If there is data at that point recreate the objects
   if (saveData !== null) {
 
-    saveData = JSON.parse(saveData);
+    var parseData = JSON.parse(saveData);
 
-    for (var i = 0; i < saveData.length; i++) {
+    for (var i = 0; i < parseData.length; i++) {
 
       //Convert the data that is saved to to proper StoreItem objects
-      new StoreItem(saveData[i].name ,saveData[i].image , parseInt(saveData[i].views), parseInt(saveData[i].clicks));
+      new StoreItem(parseData[i].name ,parseData[i].image , parseData[i].views, parseData[i].clicks);
 
     }
 
