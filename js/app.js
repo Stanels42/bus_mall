@@ -1,13 +1,11 @@
 'use strict';
 
-
-
 /**
  * Global Variables
 */
 
 //An array with all items for sale. USB is last because it's a special case
-var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
+var allItems = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'water-can', 'wine-glass', 'usb'];
 
 //This is the key that the click data is saved at in local storage
 const storageKey = 'shopItems';
@@ -67,12 +65,12 @@ function loadLocalData () {
   //If there is data at that point recreate the objects
   if (saveData !== null) {
 
-    saveData = JSON.parse(saveData);
+    var parseData = JSON.parse(saveData);
 
-    for (var i = 0; i < saveData.length; i++) {
+    for (var i = 0; i < parseData.length; i++) {
 
       //Convert the data that is saved to to proper StoreItem objects
-      new StoreItem(saveData[i].name ,saveData[i].image , parseInt(saveData[i].views), parseInt(saveData[i].clicks));
+      new StoreItem(parseData[i].name ,parseData[i].image , parseData[i].views, parseData[i].clicks);
 
     }
 
@@ -319,7 +317,7 @@ function displayResultsChart () {
   var chartCanvas = addElement('canvas', imageSpace, '', newChart).getContext('2d');
 
   //Get the different values to be displayed on the chart
-  
+
   var objNames = getData('name');
   var objClicks = getData('clicks');
   var objViews = getData('views');
@@ -337,7 +335,6 @@ function displayResultsChart () {
 
         yAxisID: 'A',
         label: '# of Times Clicked',
-
         data: objClicks,
 
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -349,7 +346,6 @@ function displayResultsChart () {
 
         yAxisID: 'A',
         label: '# of Times Viewed',
-
         data: objViews,
 
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -358,9 +354,9 @@ function displayResultsChart () {
         borderWidth: 1,
 
       }, {
+
         yAxisID: 'B',
         label: 'Percent Clicks per View',
-
         data: percentClick,
 
         backgroundColor: 'rgba(255, 159, 64, 0.2)',
@@ -375,9 +371,7 @@ function displayResultsChart () {
         yAxes: [{
 
           id: 'A',
-
           label: 'views',
-
           position: 'left',
           scalePositionLeft: 'true',
 
@@ -389,9 +383,7 @@ function displayResultsChart () {
         }, {
 
           id: 'B',
-
           label: '% Clicked',
-
           position: 'right',
 
           ticks: {
@@ -400,15 +392,10 @@ function displayResultsChart () {
             max: 100,
 
           },
-
         }],
-
       },
-
     },
-
   });
-
 }
 
 //Get the data for the property for each object and store it in an array the return
@@ -441,6 +428,7 @@ function fillPercents () {
   return percents;
 
 }
+
 //Used to add elements to HTML
 function addElement (element, parent, content = '', classTag) {
 
