@@ -1,7 +1,26 @@
-img{
-  width: 30%;
+body {
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* Header */
+header > h1 {
+  text-align: center;
+}
+
+/* Main */
+img {
+  width: 27vw;
+  height: 33vw;
   
 }
+
+/* Footer */
+footer {
+
+}
+
+/* Table Display */
 .good {
   color:darkgreen;
 }
