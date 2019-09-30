@@ -1,23 +1,32 @@
 body {
   width: 90%;
   margin: 0 auto;
+  background-color: rgb(29, 237, 253);
+  background: linear-gradient(145deg, rgb(131,58,180)0%, rgb(29,237,253)50%, rgb(252,176,69)100%);
 }
 
 /* Header */
 header > h1 {
   text-align: center;
 }
+header {
+  background: linear-gradient(145deg, rgb(252,176,69)0%, rgb(29,237,253)50%, rgb(131,58,180)100%);
+}
 
 /* Main */
 img {
-  width: 27vw;
+  width: 29.75vw;
   height: 33vw;
-  
+  outline: solid black 2px;
+}
+
+main {
+  background-color: antiquewhite;
 }
 
 /* Footer */
 footer {
-
+  text-align: center;
 }
 
 /* Table Display */

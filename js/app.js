@@ -13,6 +13,10 @@ const storageKey = 'shopItems';
 //Get the aera that encapsulates the images for the event listener
 var imageSpace = document.getElementById('votingImages');
 
+//Used to change message displays
+var footerText = document.getElementById('footerText');
+const endMessage = 'Thank you for your imput!';
+
 //Store all image elements on the page
 var allImages = [];
 
@@ -470,6 +474,9 @@ function handleVote (event) {
       // displayResultsText();
       // displayResultsTable();
       displayResultsChart();
+
+      //Change the message at the end of the servay
+      footerText.textContent = endMessage;
 
       //Save the data from the latest set of polling
       saveData();
