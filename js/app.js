@@ -127,7 +127,7 @@ function setup () {
     imageIndices.push(null);
 
     //Create an img element for each product that will be shown
-    var newImage = addElement('img', imageSpace);
+    var newImage = addElement('img', addElement('div', imageSpace));
 
     newImage.id = i;
     newImage.alt = i;
@@ -229,89 +229,6 @@ function displayResultsText () {
 
 }
 
-/**
- * Start of Table display
- */
-
-//For when the list is to cluttered and boring (Uncomment Below)
-function displayResultsTable () {
-
-  imageSpace.innerHTML = '';
-
-  var table = addElement('table', imageSpace);
-
-  tableHeader (table);
-
-  for (var i = 0; i < StoreItem.all.length; i++) {
-
-    var currentObj = StoreItem.all[i];
-
-    var currentRow = addElement('tr', table);
-
-    fillBody(currentRow, currentObj);
-
-  }
-
-}
-
-//Well it's what the name says...
-function tableHeader (table) {
-
-  var titleRow = addElement('tr', table);
-
-  addElement('th', titleRow, 'Name');
-  addElement('th', titleRow, 'Views');
-  addElement('th', titleRow, 'Clicks');
-  addElement('th', titleRow, 'Percent');
-  addElement('th', titleRow, 'Preformance');
-
-}
-
-//The fun part of the table with unessary information
-function fillBody (currentRow, currentObj) {
-
-  var percentClick = ((currentObj.clicks / currentObj.views) * 100);
-  var preformance = (percentClick * imageShown);
-
-  addElement('td', currentRow, currentObj.name);
-  addElement('td', currentRow, currentObj.views);
-  addElement('td', currentRow, currentObj.clicks);
-
-  if (currentObj.views === 0) {
-
-    addElement('td', currentRow, 'No Data', 'veryBad');
-
-  } else {
-
-    addElement('td', currentRow, `${percentClick.toFixed(2)}%`);
-
-  }
-
-  //Yeah this function has a lot of math and stuff
-  if (percentClick.toFixed(2) === (100 / imageShown).toFixed(2)) {
-
-    addElement('td', currentRow, `${preformance.toFixed(2)}%`);
-
-  } else if (preformance.toFixed(2) > 100) {
-
-    addElement('td', currentRow, `+ ${preformance.toFixed(2)}%`, 'good');
-
-  } else if (percentClick === 0.00) {
-
-    addElement('td', currentRow, 'No Intrest In Product', 'veryBad');
-
-  } else {
-
-    addElement('td', currentRow, `- ${preformance.toFixed(2)}%`, 'bad');
-
-  }
-}
-
-/**
- * End of Table display
- *
- * Start of chart display
- */
 
 function displayResultsChart () {
 
@@ -321,7 +238,6 @@ function displayResultsChart () {
   var chartCanvas = addElement('canvas', imageSpace, '', newChart).getContext('2d');
 
   //Get the different values to be displayed on the chart
-
   var objNames = getData('name');
   var objClicks = getData('clicks');
   var objViews = getData('views');
@@ -378,6 +294,7 @@ function displayResultsChart () {
           label: 'views',
           position: 'left',
           scalePositionLeft: 'true',
+          display: true,
 
           ticks: {
             beginAtZero: true,
@@ -434,13 +351,14 @@ function fillPercents () {
 }
 
 //Used to add elements to HTML
-function addElement (element, parent, content = '', classTag) {
+function addElement (element, parent, content = '', classTag = null) {
 
   var newElement = document.createElement(element);
-
   newElement.textContent = content;
 
-  newElement.classList.add(classTag);
+  if (classTag !== null) {
+    newElement.classList.add(classTag);
+  }
 
   parent.appendChild(newElement);
 
@@ -472,7 +390,6 @@ function handleVote (event) {
       imageSpace.removeEventListener('click', handleVote);
 
       // displayResultsText();
-      // displayResultsTable();
       displayResultsChart();
 
       //Change the message at the end of the servay
@@ -490,8 +407,8 @@ function handleVote (event) {
 
   }
 
-
 }
+
 /**
 End Function Declarations
  */
