@@ -127,7 +127,7 @@ function setup () {
     imageIndices.push(null);
 
     //Create an img element for each product that will be shown
-    var newImage = addElement('img', imageSpace);
+    var newImage = addElement('img', addElement('div', imageSpace));
 
     newImage.id = i;
     newImage.alt = i;
@@ -321,7 +321,6 @@ function displayResultsChart () {
   var chartCanvas = addElement('canvas', imageSpace, '', newChart).getContext('2d');
 
   //Get the different values to be displayed on the chart
-
   var objNames = getData('name');
   var objClicks = getData('clicks');
   var objViews = getData('views');
@@ -378,6 +377,7 @@ function displayResultsChart () {
           label: 'views',
           position: 'left',
           scalePositionLeft: 'true',
+          display: true,
 
           ticks: {
             beginAtZero: true,
@@ -434,13 +434,14 @@ function fillPercents () {
 }
 
 //Used to add elements to HTML
-function addElement (element, parent, content = '', classTag) {
+function addElement (element, parent, content = '', classTag = null) {
 
   var newElement = document.createElement(element);
-
   newElement.textContent = content;
 
-  newElement.classList.add(classTag);
+  if (classTag !== null) {
+    newElement.classList.add(classTag);
+  }
 
   parent.appendChild(newElement);
 
@@ -490,8 +491,8 @@ function handleVote (event) {
 
   }
 
-
 }
+
 /**
 End Function Declarations
  */
